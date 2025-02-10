@@ -1,0 +1,87 @@
+Here are the simplified versions of the tasks you've requested:
+
+### 7. Node.js file to open and return content, with 404 error on failure:
+```javascript
+const fs = require('fs');
+const http = require('http');
+
+http.createServer((req, res) => {
+  fs.readFile('requestedfile.txt', 'utf8', (err, data) => {
+    if (err) return res.statusCode = 404 && res.end('File not found');
+    res.end(data);
+  });
+}).listen(3000);
+```
+
+### 8. Simple Web Server using Node.js:
+```javascript
+const http = require('http');
+http.createServer((req, res) => {
+  res.end('Hello World');
+}).listen(3000);
+```
+
+### 9. User Login System using Node.js and Express:
+```javascript
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/login', (req, res) => {
+  if (req.body.username === 'user' && req.body.password === 'password') {
+    res.send('Login Successful');
+  } else {
+    res.send('Invalid Credentials');
+  }
+});
+
+app.listen(3000);
+```
+
+### 10. Basic To-Do List Application using Express.js:
+```javascript
+const express = require('express');
+const app = express();
+let tasks = [];
+app.use(express.urlencoded({ extended: true }));
+
+// Add task
+app.post('/add', (req, res) => {
+  tasks.push(req.body.task);
+  res.redirect('/');
+});
+
+// Delete task
+app.post('/delete', (req, res) => {
+  tasks = tasks.filter(task => task !== req.body.task);
+  res.redirect('/');
+});
+
+// Render tasks
+app.get('/', (req, res) => {
+  res.send(`
+    <form method="POST" action="/add">
+      <input type="text" name="task" required>
+      <button type="submit">Add Task</button>
+    </form>
+    <ul>
+      ${tasks.map(task => `
+        <li>
+          ${task}
+          <form method="POST" action="/delete" style="display:inline;">
+            <input type="hidden" name="task" value="${task}">
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      `).join('')}
+    </ul>
+    <p>Total Tasks: ${tasks.length}</p>
+  `);
+});
+
+app.listen(3000);
+```
+
+Each task is reduced to its simplest form, focusing on core functionality.
