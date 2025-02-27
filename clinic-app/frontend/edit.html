@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Appointment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2>Edit Appointment</h2>
+    <form id="editForm">
+        <input type="hidden" id="appointmentId">
+        <input class="form-control mb-2" type="text" id="editPatientName" required>
+        <input class="form-control mb-2" type="text" id="editDoctorName" required>
+        <input class="form-control mb-2" type="date" id="editDate" required>
+        <input class="form-control mb-2" type="time" id="editTime" required>
+        <button class="btn btn-primary">Save Changes</button>
+    </form>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        async function loadAppointment() {
+            const res = await fetch(`/appointments/${id}`);
+            const appt = await res.json();
+            document.getElementById("appointmentId").value = appt._id;
+            document.getElementById("editPatientName").value = appt.patientName;
+            document.getElementById("editDoctorName").value = appt.doctorName;
+            document.getElementById("editDate").value = appt.date;
+            document.getElementById("editTime").value = appt.time;
+        }
+
+        document.getElementById("editForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const updatedData = {
+                patientName: document.getElementById("editPatientName").value,
+                doctorName: document.getElementById("editDoctorName").value,
+                date: document.getElementById("editDate").value,
+                time: document.getElementById("editTime").value
+            };
+
+            await fetch(`/appointments/edit/${id}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(updatedData)
+            });
+
+            window.location.href = "/";
+        });
+
+        loadAppointment();
+    </script>
+</body>
+</html>
